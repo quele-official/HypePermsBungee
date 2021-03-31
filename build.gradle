@@ -1,0 +1,57 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'maven'
+
+}
+group 'de.hype.perms'
+version '1.0-SNAPSHOT'
+
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+repositories {
+    mavenCentral()
+    jcenter()
+    mavenLocal()
+    maven {
+        url 'https://papermc.io/repo/repository/maven-public/'
+    }
+    maven {
+        url 'https://jitpack.io'
+    }
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
+
+}
+
+dependencies {
+    shadow localGroovy()
+    shadow 'junit:junit:3.8.2'
+    shadow gradleApi()
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "com.github.jengelman.gradle.plugins:shadow:6.1.0"
+    compileClasspath("com.github.jengelman.gradle.plugins:shadow:6.1.0")
+    implementation 'org.projectlombok:lombok:1.18.18'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    compileOnly 'io.github.waterfallmc:waterfall-api:1.16-R0.4-SNAPSHOT'
+    implementation "com.github.jengelman.gradle.plugins:shadow:6.1.0"
+
+}
+
+/*jar {
+    archiveBaseName.set('HypePerms')
+    archiveClassifier.set('SNAPSHOT')
+    archiveVersion.set('1.0')
+    destinationDir("D:\\Muhammed\\programming\\Minecraft\\Localhost\\Waterfall\\plugins" as File)
+}*/
+
+test {
+    useJUnitPlatform()
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java'
