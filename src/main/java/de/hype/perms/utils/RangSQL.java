@@ -1,5 +1,7 @@
 package de.hype.perms.utils;
 
+import de.hype.perms.commands.RangCommand;
+import de.proxy.hypedcbot.discord.DiscordManager;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -26,16 +28,20 @@ public class RangSQL {
 
     public static void registerPlayer(ProxiedPlayer player) {
         if(!(playerExists(player))) {
-            MySQL.update("INSERT INTO rang(UUID, Rang, DiscordId) VALUES ('" + player.getUniqueId().toString() + "', 'Spieler', '')");
+            MySQL.update("INSERT INTO rang(UUID, Rang, DiscordId, OldRang) VALUES ('" + player.getUniqueId().toString() + "', 'Spieler', '', '')");
         } else {
             ProxyServer.getInstance().getConsole().sendMessage("User existiert bereits");
         }
     }
 
-    public static void setRang(String uuid, Rang rang) {
-        removeOldRang(uuid);
+    public static void setRang(ProxiedPlayer player, Rang rang) {
+        removeOldRang(player.getUniqueId().toString());
 
-        MySQL.update("UPDATE Rang SET Rang= '" + rang.getName() + "' WHERE UUID= '" + uuid + "'");
+        MySQL.update("UPDATE Rang SET Rang= '" + rang.getName() + "' WHERE UUID= '" + player.getUniqueId().toString() + "'");
+
+
+        de.proxy.hypedcbot.discord.mysql.RangSQL.setRangOnDiscord(player,
+                String.valueOf(de.proxy.hypedcbot.discord.mysql.RangSQL.getDiscordId(player.getUniqueId().toString())));
     }
 
     public static String getRangName(String uuid) {
@@ -88,7 +94,7 @@ public class RangSQL {
 
             assert result != null;
             if (result.next()) {
-                MySQL.update("UPDATE rang SET Rang= 'Spieler' WHERE UUID= '" + uuid + "'");
+                MySQL.update("UPDATE rang SET OldRang= '" + result.getString("Rang") + "' WHERE UUID= '" + uuid + "'");
             }
         } catch (SQLException ignored) {
 
