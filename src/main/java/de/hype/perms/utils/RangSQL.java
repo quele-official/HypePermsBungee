@@ -26,10 +26,16 @@ public class RangSQL {
 
     public static void registerPlayer(ProxiedPlayer player) {
         if(!(playerExists(player))) {
-            MySQL.update("INSERT INTO rang(UUID, Rang) VALUES ('" + player.getUniqueId().toString() + "', 'Spieler')");
+            MySQL.update("INSERT INTO rang(UUID, Rang, DiscordId) VALUES ('" + player.getUniqueId().toString() + "', 'Spieler', '')");
         } else {
             ProxyServer.getInstance().getConsole().sendMessage("User existiert bereits");
         }
+    }
+
+    public static void setRang(String uuid, Rang rang) {
+        removeOldRang(uuid);
+
+        MySQL.update("UPDATE Rang SET Rang= '" + rang.getName() + "' WHERE UUID= '" + uuid + "'");
     }
 
     public static String getRangName(String uuid) {
@@ -68,7 +74,7 @@ public class RangSQL {
             if (result.next()) {
                 return Rang.valueOf(result.getString("Rang")).getId();
             }
-        } catch (SQLException | NullPointerException exception) {
+        } catch (SQLException ignored) {
             return Rang.Spieler.getId();
         }
         return Rang.Spieler.getId();

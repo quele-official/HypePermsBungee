@@ -1,5 +1,6 @@
 package de.hype.perms;
 
+import de.hype.perms.commands.RangCommand;
 import de.hype.perms.listener.ConnectionListener;
 import de.hype.perms.utils.MySQL;
 import net.md_5.bungee.api.ProxyServer;
@@ -18,6 +19,8 @@ public class HypePermsBungee extends Plugin {
         MySQL.connect();
 
         ProxyServer.getInstance().getPluginManager().registerListener(this, new ConnectionListener());
+
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new RangCommand("rang"));
     }
 
     @Override
