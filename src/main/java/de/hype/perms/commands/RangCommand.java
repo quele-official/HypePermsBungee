@@ -1,5 +1,6 @@
 package de.hype.perms.commands;
 
+import com.google.common.collect.Lists;
 import de.hype.perms.HypePermsBungee;
 import de.hype.perms.utils.Rang;
 import de.hype.perms.utils.RangSQL;
@@ -8,8 +9,11 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.TabExecutor;
 
-public class RangCommand extends Command {
+import java.util.ArrayList;
+
+public class RangCommand extends Command implements TabExecutor {
 
     public RangCommand(String name) {
         super(name);
@@ -72,6 +76,63 @@ public class RangCommand extends Command {
             } else {
                 sender.sendMessage(new TextComponent(HypePermsBungee.getInstance().getPrefix() + "§cNutze /rang <Spieler> <Rang>§8!"));
             }
+        }
+    }
+
+    @Override
+    public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
+        if (sender instanceof ProxiedPlayer) {
+            ProxiedPlayer player = (ProxiedPlayer) sender;
+            if (RangSQL.getRangId(player.getUniqueId().toString()) > 7) {
+                ArrayList<String> complete = Lists.newArrayList();
+                if (args.length >= 1) {
+                    if(args.length == 1) {
+                        ArrayList<String> players = new ArrayList<>();
+                        for (ProxiedPlayer proxiedPlayer : ProxyServer.getInstance().getPlayers()) {
+                            players.add(proxiedPlayer.getName());
+                        }
+                        return players;
+                    }
+                    ProxiedPlayer target = ProxyServer.getInstance().getPlayer(args[0]);
+                    if(target == null) {
+                        return Lists.newArrayList("");
+                    }
+                    if (args.length == 2) {
+                        for (Rang rang : Rang.getRangs()) {
+                            if (RangSQL.getRang(target.getUniqueId().toString()) != rang) {
+                                complete.add(rang.getName());
+                            }
+                        }
+                    }
+                }
+                return complete;
+            } else {
+                ArrayList<String> complete = Lists.newArrayList("Keine Rechte");
+                return complete;
+            }
+        } else {
+            ArrayList<String> complete = Lists.newArrayList();
+            if (args.length >= 1) {
+                if(args.length == 1) {
+                    ArrayList<String> players = new ArrayList<>();
+                    for (ProxiedPlayer proxiedPlayer : ProxyServer.getInstance().getPlayers()) {
+                        players.add(proxiedPlayer.getName());
+                    }
+                    return players;
+                }
+                ProxiedPlayer target = ProxyServer.getInstance().getPlayer(args[0]);
+                if(target == null) {
+                    return Lists.newArrayList("");
+                }
+                if (args.length == 2) {
+                    for (Rang rang : Rang.getRangs()) {
+                        if (RangSQL.getRang(target.getUniqueId().toString()) != rang) {
+                            complete.add(rang.getName());
+                        }
+                    }
+                }
+            }
+            return complete;
         }
     }
 }

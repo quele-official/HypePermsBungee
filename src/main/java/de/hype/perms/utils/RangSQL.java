@@ -66,6 +66,8 @@ public class RangSQL {
         return Rang.Spieler;
     }
 
+    //Was jetzt
+
     public static Integer getRangId(String uuid) {
         try {
             ResultSet result = MySQL.getResult("SELECT * FROM rang WHERE UUID= '" + uuid + "'");

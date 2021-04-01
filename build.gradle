@@ -41,7 +41,6 @@ dependencies {
     implementation 'org.projectlombok:lombok:1.18.18'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-    compileOnly('de.proxy.hypedcbot.discord:')
     compileOnly 'io.github.waterfallmc:waterfall-api:1.16-R0.4-SNAPSHOT'
     implementation "com.github.jengelman.gradle.plugins:shadow:6.1.0"
 
