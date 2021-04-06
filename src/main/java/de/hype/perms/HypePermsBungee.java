@@ -9,14 +9,13 @@ import net.md_5.bungee.api.plugin.Plugin;
 public class HypePermsBungee extends Plugin {
 
     private static HypePermsBungee instance;
+    private MySQL mySQL;
 
     @Override
     public void onEnable() {
         instance = this;
 
-        new MySQL("127.0.0.1", "root", "", "test");
-
-        MySQL.connect();
+        mySQL = new MySQL("127.0.0.1", "root", "", "test");
 
         ProxyServer.getInstance().getPluginManager().registerListener(this, new ConnectionListener());
 
@@ -34,5 +33,9 @@ public class HypePermsBungee extends Plugin {
 
     public String getPrefix() {
         return "§cHypePerms §8| §7";
+    }
+
+    public MySQL getMySQL() {
+        return mySQL;
     }
 }

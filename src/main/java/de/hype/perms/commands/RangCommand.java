@@ -3,7 +3,7 @@ package de.hype.perms.commands;
 import com.google.common.collect.Lists;
 import de.hype.perms.HypePermsBungee;
 import de.hype.perms.utils.Rang;
-import de.hype.perms.utils.RangSQL;
+import de.hype.perms.utils.SQL;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -36,16 +36,16 @@ public class RangCommand extends Command implements TabExecutor {
                 Rang rang = Rang.getRangByName(args[1]);
                 if (rang != null) {
                     String rangColor = rang.getPrefix().substring(0, 2);
-                    if (RangSQL.getRangId(player.getUniqueId().toString()) < 7) {
+                    if (SQL.getRangId(player.getUniqueId().toString()) < 7) {
                         player.sendMessage(HypePermsBungee.getInstance().getPrefix() + "§7Nicht genug §cRechte§8.");
                         return;
                     }
-                    if(rang.getId() >= RangSQL.getRangId(player.getUniqueId().toString())) {
+                    if(rang.getId() >= SQL.getRangId(player.getUniqueId().toString())) {
 
                         player.sendMessage(HypePermsBungee.getInstance().getPrefix() + "§7Nicht genug §cRechte§8.");
                         return;
                     }
-                    RangSQL.setRang(targetPlayer, rang);
+                    SQL.setRang(targetPlayer, rang);
                     player.sendMessage(HypePermsBungee.getInstance().getPrefix() + "§7Du hast dem Spieler " + rangColor + targetPlayer.getName()
                             + " §7die Gruppe " + rangColor + rang.getName() + " §7gesetzt§8.");
                     targetPlayer.sendMessage(HypePermsBungee.getInstance().getPrefix() + "§7Du hast einen neuen Rang erhalten§8!");
@@ -69,7 +69,7 @@ public class RangCommand extends Command implements TabExecutor {
                 Rang rang = Rang.getRangByName(args[1]);
                 if (rang != null) {
                     String rangColor = rang.getPrefix().substring(0, 2);
-                    RangSQL.setRang(targetPlayer, rang);
+                    SQL.setRang(targetPlayer, rang);
                     sender.sendMessage(HypePermsBungee.getInstance().getPrefix() + "§7Du hast dem Spieler " + rangColor + targetPlayer.getName()
                             + " §7die Gruppe " + rangColor + rang.getName() + " §7gesetzt§8.");
                 } else {
@@ -87,13 +87,13 @@ public class RangCommand extends Command implements TabExecutor {
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
         if (sender instanceof ProxiedPlayer) {
             ProxiedPlayer player = (ProxiedPlayer) sender;
-            if (RangSQL.getRangId(player.getUniqueId().toString()) >= 7) {
+            if (SQL.getRangId(player.getUniqueId().toString()) >= 7) {
                 ArrayList<String> complete = Lists.newArrayList();
                 if (args.length >= 1) {
                     if (args.length == 1) {
                         ArrayList<String> players = new ArrayList<>();
                         for (ProxiedPlayer proxiedPlayer : ProxyServer.getInstance().getPlayers()) {
-                            if(RangSQL.getRangId(proxiedPlayer.getUniqueId().toString()) < RangSQL.getRangId(player.getUniqueId().toString())) {
+                            if(SQL.getRangId(proxiedPlayer.getUniqueId().toString()) < SQL.getRangId(player.getUniqueId().toString())) {
                                 players.add(proxiedPlayer.getName());
                             }
                         }
@@ -105,8 +105,8 @@ public class RangCommand extends Command implements TabExecutor {
                     }
                     if (args.length == 2) {
                         for (Rang rang : Rang.getRangs()) {
-                            if (RangSQL.getRang(target.getUniqueId().toString()) != rang) {
-                                if(rang.getId() < RangSQL.getRangId(player.getUniqueId().toString())) {
+                            if (SQL.getRang(target.getUniqueId().toString()) != rang) {
+                                if(rang.getId() < SQL.getRangId(player.getUniqueId().toString())) {
                                     complete.add(rang.getName());
                                 }
                             }
@@ -134,7 +134,7 @@ public class RangCommand extends Command implements TabExecutor {
                 }
                 if (args.length == 2) {
                     for (Rang rang : Rang.getRangs()) {
-                        if (RangSQL.getRang(target.getUniqueId().toString()) != rang) {
+                        if (SQL.getRang(target.getUniqueId().toString()) != rang) {
                             complete.add(rang.getName());
                         }
                     }
